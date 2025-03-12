@@ -178,6 +178,17 @@ async function create(vm) {
       path: "/fields/System.Tags",
       value: "GitHub Issue; " + vm.repo_name
     },
+{
+          op: "add",
+          path: "/relations/-",
+          value: {
+            rel: "System.LinkTypes.Hierarchy-Reverse",
+            url: `https://dev.azure.com/{organization}/{project}/_apis/wit/workItems/${vm.env.parentID}`,
+            attributes: {
+              comment: "Making this work item a child of the parent work item"
+            }
+          }
+        },
     {
       op: "add",
       path: "/relations/-",
@@ -337,6 +348,7 @@ async function update(vm, workItem) {
       }
     );
   }
+
 
   var commentEdited = false;
   if (vm.comment_text != "") {
@@ -748,7 +760,8 @@ function getValuesFromPayload(payload, env) {
 			activeState: env.ado_active_state != undefined ? env.ado_active_state : "Active",
 			bypassRules: env.ado_bypassrules != undefined ? env.ado_bypassrules : false,
       logLevel: env.log_level != undefined ? env.log_level : 100,
-      assignedTo: env.ado_assigned_to != undefined ? env.ado_assigned_to : "none"
+      assignedTo: env.ado_assigned_to != undefined ? env.ado_assigned_to : "none",
+      parentID: env.ado_parent_id != undefined ? env.ado_parent_id : "none" 
 		}
 	};
 
